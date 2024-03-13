@@ -7,12 +7,10 @@ public class Main_Frekvens {
 		String[] ord = {"er", "det", "finn", "er", "finn", "er"};
 		
 		// Lag ordbok
-		
 		Ordbok<String, Integer> frekvenser = new Ordbok<>();
 		
 		
 		// Tell opp
-		
 		for (String e : ord) {
 			Integer verdi = frekvenser.getVerdi(e);
 			if (verdi == null) {
@@ -24,7 +22,6 @@ public class Main_Frekvens {
 		
 		
 		// Skriv ut frekvensoversikt
-		
 		Iterator<String> nI = frekvenser.getNokkelIterator();
 		Iterator<Integer> vI = frekvenser.getVerdiIterator();
 		
