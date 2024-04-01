@@ -17,6 +17,10 @@ public class BinaerTre<T> implements BinaerTreADT<T> {
 		rot = new BinaerTreNode<>(data);
 	}
 
+	public BinaerTre(T rotData, BinaerTre<T> venstre, BinaerTre<T> hogre) {
+		privateSetTre(rotData, venstre, hogre);
+	}
+	
 	@Override
 	public int getAntall() {
 		return getAntall(rot);
