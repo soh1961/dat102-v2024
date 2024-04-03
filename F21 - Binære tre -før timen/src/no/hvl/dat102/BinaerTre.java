@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
 import no.hvl.dat102.lenketstabel.LenketStabel;
 import no.hvl.dat102.lenketstabel.StabelADT;
 
-public class BinaerTre<T> implements BinaerTreADT<T> {
+public class BinaerTre<T> implements BinaerTreADT<T>, Iterable<T> {
 	private BinaerTreNode<T> rot;
 
 	public BinaerTre() {
@@ -20,7 +20,7 @@ public class BinaerTre<T> implements BinaerTreADT<T> {
 	public BinaerTre(T rotData, BinaerTre<T> venstre, BinaerTre<T> hogre) {
 		privateSetTre(rotData, venstre, hogre);
 	}
-	
+
 	@Override
 	public int getAntall() {
 		return getAntall(rot);
@@ -43,9 +43,10 @@ public class BinaerTre<T> implements BinaerTreADT<T> {
 		return 0;
 	}
 
-	/* Dei tre vis-metodane nedanfor er tatt med for å vise rekursiv gjennnomgang av tre.
-	 * Bruk av iteratorar er meir generelt for det er ikkje sikkert at du ønskjer å skrive
-	 * ut elementa.
+	/*
+	 * Dei tre vis-metodane nedanfor er tatt med for å vise rekursiv gjennnomgang av
+	 * tre. Bruk av iteratorar er meir generelt for det er ikkje sikkert at du
+	 * ønskjer å skrive ut elementa.
 	 */
 	public void visPreorden() {
 		visPreorden(rot);
@@ -137,9 +138,51 @@ public class BinaerTre<T> implements BinaerTreADT<T> {
 	@Override
 	public Iterator<T> getPreordenIterator() {
 		// TODO Auto-generated method stub
-		return null;
+		return new PreordenIterator();
 	}
 
+	private class PreordenIterator implements Iterator<T> {
+		private StabelADT<BinaerTreNode<T>> nodeStack;
+		private BinaerTreNode<T> currentNode;
+
+		public PreordenIterator() {
+			nodeStack = new LenketStabel<>();
+			currentNode = rot;
+		}
+
+		public boolean hasNext() {
+			return !nodeStack.isEmpty() || (currentNode != null);
+		}
+
+		public T next() {
+			BinaerTreNode<T> nextNode = null;
+			if (currentNode != null) {
+				nextNode = currentNode;
+				if (currentNode.getHogre() != null) {
+					nodeStack.push(currentNode.getHogre());
+					currentNode = currentNode.getVenstre();
+				} else {
+					if (!nodeStack.isEmpty()) {
+						currentNode = nodeStack.pop();
+					} else {
+						currentNode = null;
+					}
+				}
+			} else {
+				if (!nodeStack.isEmpty()) {
+					nextNode = nodeStack.pop();
+					currentNode = nextNode.getVenstre();
+				}
+			}
+
+			return nextNode.getElement();
+		}
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		return new PreordenIterator();
+	}
 	@Override
 	public Iterator<T> getPostOrdenIterator() {
 		// TODO Auto-generated method stub
@@ -166,10 +209,10 @@ public class BinaerTre<T> implements BinaerTreADT<T> {
 	public void setTre(T rotData, BinaerTre<T> venstre, BinaerTre<T> hogre) {
 		privateSetTre(rotData, venstre, hogre);
 	}
-	
+
 	private void privateSetTre(T rotData, BinaerTre<T> venstre, BinaerTre<T> hogre) {
 		rot = new BinaerTreNode<T>(rotData);
-		
+
 		if (venstre != null) {
 			rot.setVenstre(venstre.rot);
 		}
