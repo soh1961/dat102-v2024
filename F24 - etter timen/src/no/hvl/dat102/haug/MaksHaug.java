@@ -63,7 +63,13 @@ public final class MaksHaug<T extends Comparable<? super T>> implements MaksHaug
 	public T fjernMaks() {
 		T rot = null;
 
-		// fyll inn
+
+		if (!erTom()) {
+			rot = haug[1];
+			haug[1] = haug[antall];
+			antall--;
+			reparerNed(1);
+		}
 
 		return rot;
 	} 
